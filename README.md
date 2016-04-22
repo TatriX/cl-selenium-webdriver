@@ -1,6 +1,8 @@
 # CL Selenium WebDriver
 CL Selenium WebDriver is a binding library to the Selenium 2.0
 
+## Warning
+This software is in development. The APIs will be likely to change.
 
 ## Usage
 ```lisp
