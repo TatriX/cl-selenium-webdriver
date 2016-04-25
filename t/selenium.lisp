@@ -1,21 +1,13 @@
-(in-package :selenium)
+(in-package :cl-user)
 
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (ql:quickload '(prove))
-  (use-package :prove))
+(defpackage selenium-test
+  (:use :cl :selenium :prove))
 
-;; (in-package :cl-user)
-;; (defpackage :selenium-test
-;;   (:use :cl :selenium :prove))
-;; (in-package selenium-test)
-
-
-
-
+(in-package :selenium-test)
 
 (plan nil)
 
-(is-print (princ (make-uri "/session") nil) "#<quri.uri.http:uri-http http://127.0.0.1:4444/wd/hub/session>")
+(is-print (princ (selenium::make-uri "/session") nil) "#<quri.uri.http:uri-http http://127.0.0.1:4444/wd/hub/session>")
 
 (defparameter *base-url* "https://www.google.com?hl=en")
 
@@ -40,8 +32,13 @@
   (with-session ()
     (setf (url) *base-url*)
     (ok (find-element "#lst-ib"))
-    (is-type (find-element "[name=q]") 'element)
+    (is-type (find-element "[name=q]") 'selenium::element)
     (ok (element-id (find-element "[name=btnK]")))))
+
+(subtest "find-element-no-such-element"
+  (with-session ()
+    (setf (url) *base-url*)
+    (is-error (find-element (gensym)) 'selenium:no-such-element-error)))
 
 (subtest "element-clear"
   (with-session ()

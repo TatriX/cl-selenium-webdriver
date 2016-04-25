@@ -79,11 +79,26 @@
        :initform (error "Must supply :id")
        :reader element-id)))
 
+(define-condition no-such-element-error (error)
+  ((value :initarg :value)
+   (by :initarg :by))
+  (:report (lambda (condition stream)
+             (with-slots (value by) condition
+               (format stream "No such element: ~a (by ~a)" value by)))))
+
+(defun handle-find-error (err &key value by)
+  (error
+   (case (cdr (assoc :status (decode (dex:response-body err))))
+     (7 (make-instance 'no-such-element-error :value value :by by))
+     (t err))))
+
 (defun find-element (value &key (by :css-selector) (session *session*))
-  (let ((response (decode (http-post (session-path session "/element") `(:value ,value :using ,(by by))))))
-    ;; TODO: find/write json -> clos
-    (make-instance 'element
-                   :id (cdadr (assoc :value response)))))
+  (handler-case
+      (let ((response (decode (http-post (session-path session "/element") `(:value ,value :using ,(by by))))))
+        ;; TODO: find/write json -> clos
+        (make-instance 'element
+                       :id (cdadr (assoc :value response))))
+    (error (err) (handle-find-error err :value value :by by))))
 
 (defun by (type)
   (ecase type
