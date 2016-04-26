@@ -3,8 +3,12 @@
   :author "TatriX <tatrics@gmail.com>"
   :license "MIT"
   :depends-on (:dexador :quri :cl-json :alexandria)
+  :serial t
   :components ((:module "src"
                         :components
                         ((:file "package")
-                         (:file "selenium" :depends-on ("package")))))
+                         (:file "errors")
+                         (:file "keys")
+                         (:file "selenium")
+                         (:file "utils"))))
   :in-order-to ((test-op (test-op selenium-test))))

@@ -20,8 +20,7 @@ func main() {
   (let ((elem (find-element "#code" :by :css-selector)))
     (element-clear elem)
     (element-send-keys elem *code*))
-  (let ((btn (find-element "#run")))
-    (element-click btn))
+  (element-click (find-element "#run")))
 
   (loop
      with div = (find-element "#output")

@@ -7,6 +7,7 @@
   :components
   ((module "t"
            :components ((:test-file "selenium")
+                        (:test-file "utils")
                         (:test-file "example"))))
   :perform (test-op :after (op c)
                     (funcall (intern #.(string :run) :prove) c)))

@@ -1,4 +1,4 @@
-(in-package selenium)
+(in-package :selenium)
 
 (defun encode (plist)
   (cl-json:encode-json-plist-to-string plist))
@@ -9,17 +9,27 @@
 (defparameter *uri* "http://127.0.0.1:4444/")
 (defparameter *prefix* "/wd/hub")
 
+(defmacro with-decode-and-handler (body)
+  `(handler-case (decode ,body)
+     (dex:http-request-failed (err) (error 'protocol-error :body (decode (dex:response-body err))))))
+
 (defun http-get (path)
-  (dex:get (make-uri path)))
+  (with-decode-and-handler
+      (dex:get (make-uri path))))
+
+(defun http-get-value (path value)
+  (assoc-value (http-get path) value))
 
 (defun http-post (path &optional params)
   ;; (format t "Sending ~a -> ~a~%" (encode params) path)
-  (dex:post (make-uri path)
-            :content (encode params)
-            :headers '(("Content-Type" . "application/json;charset=UTF-8"))))
+  (with-decode-and-handler
+      (dex:post (make-uri path)
+                :content (encode params)
+                :headers '(("Content-Type" . "application/json;charset=UTF-8")))))
 
 (defun http-delete (path)
-  (dexador:delete (make-uri path)))
+  (with-decode-and-handler
+      (dexador:delete (make-uri path))))
 
 (defun make-uri (path)
   (quri:make-uri :defaults *uri*
@@ -37,17 +47,20 @@
                        browser-version
                        platform-name
                        platform-version
-                       accept-ssl-certs
-                       &allow-other-keys)
-  (let ((response (decode (http-post "/session"
-                                     `(:session-id nil
-                                                   :desired-capabilities ((browser-name . ,browser-name)))))))
+                       accept-ssl-certs)
+  (let ((response (http-post "/session"
+                             `(:session-id nil
+                                           :desired-capabilities ((browser-name . ,browser-name)
+                                                                  (browser-version . ,browser-version)
+                                                                  (platform-name . ,platform-name)
+                                                                  (platform-version . ,platform-version)
+                                                                  (accept-ssl-certs . ,accept-ssl-certs))))))
     ;; TODO: find/write json -> clos
     (make-instance 'session
-                   :id (cdr (assoc :session-id response)))))
+                   :id (assoc-value response :session-id))))
 
 (defun delete-session (session)
-  (http-delete (format nil "/session/~a" (session-id session))))
+  (http-delete (session-path session "")))
 
 ;; TODO: make eldoc-friendly
 (defmacro with-session ((&rest capabilities) &body body)
@@ -68,7 +81,7 @@
   (http-post (session-path session "/url") `(:url ,url)))
 
 (defun url (&key (session *session*))
-  (cdr (assoc :value (decode (http-get (session-path session "/url"))))))
+  (http-get-value (session-path session "/url") :value))
 
 (defun back (&key (session *session*))
   (http-post (session-path session "/back")))
@@ -79,26 +92,20 @@
        :initform (error "Must supply :id")
        :reader element-id)))
 
-(define-condition no-such-element-error (error)
-  ((value :initarg :value)
-   (by :initarg :by))
-  (:report (lambda (condition stream)
-             (with-slots (value by) condition
-               (format stream "No such element: ~a (by ~a)" value by)))))
-
 (defun handle-find-error (err &key value by)
   (error
-   (case (cdr (assoc :status (decode (dex:response-body err))))
+   (case (protocol-error-status err)
      (7 (make-instance 'no-such-element-error :value value :by by))
+     (10 (make-instance 'stale-element-reference :value value :by by))
      (t err))))
 
 (defun find-element (value &key (by :css-selector) (session *session*))
   (handler-case
-      (let ((response (decode (http-post (session-path session "/element") `(:value ,value :using ,(by by))))))
+      (let ((response (http-post (session-path session "/element") `(:value ,value :using ,(by by)))))
         ;; TODO: find/write json -> clos
         (make-instance 'element
                        :id (cdadr (assoc :value response))))
-    (error (err) (handle-find-error err :value value :by by))))
+    (protocol-error (err) (handle-find-error err :value value :by by))))
 
 (defun by (type)
   (ecase type
@@ -111,12 +118,17 @@
     (:class-name "class-name")
     (:css-selector "css selector")))
 
+(defun active-element (&key (session *session*))
+  (make-instance 'element
+                 :id (cdadr (assoc :value (http-post (session-path session "/element/active"))))))
+
 
 (defun element-clear (element &key (session *session*))
   (http-post (session-path session "/element/~a/clear" (element-id element))))
 
 
 (defun element-send-keys (element keys &key (session *session*))
+  (check-type keys (string))
   (http-post (session-path session "/element/~a/value"
                            (element-id element))
              `(:value ,(coerce keys 'list))))
@@ -126,6 +138,36 @@
                            (element-id element))))
 
 (defun element-text (element &key (session *session*))
-  (let ((response (decode (http-get (session-path session "/element/~a/text" (element-id element))))))
-    ;; TODO: find/write json -> clos
-    (cdr (assoc :value response))))
+  (http-get-value (session-path session "/element/~a/text" (element-id element))
+                  :value))
+
+(defun element-attribute (element name &key (session *session*))
+  (http-get-value (session-path session "/element/~a/attribute/~a" (element-id element) name)
+                  :value))
+
+(defclass cookie ()
+  ((name :initarg :name)
+   (value :initarg :value)
+   (path :initarg :path)
+   (domain :initarg :domain)
+   (secure :initarg :secure)
+   (expiry :initarg :expiry)))
+
+(defun make-cookie (name value &key path domain secure expiry)
+  (make-instance 'cookie
+                 :name name
+                 :value value
+                 :path path
+                 :domain domain
+                 :secure secure
+                 :expiry expiry))
+
+(defun (setf cookie) (cookie &key (session *session*))
+  (check-type cookie cookie)
+  (http-post (session-path session "/cookie") `(:cookie ,cookie)))
+
+(defun cookie (&key (session *session*))
+  (http-get-value (session-path session "/cookie") :value))
+
+(defun refresh (&key (session *session*))
+  (http-post (session-path session "/refresh")))
