@@ -9,6 +9,8 @@
                         ((:file "package")
                          (:file "errors")
                          (:file "keys")
+                         (:file "http")
+                         (:file "session")
                          (:file "selenium")
                          (:file "utils"))))
   :in-order-to ((test-op (test-op selenium-test))))

@@ -1,9 +1,4 @@
-(in-package :selenium)
-
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (ql:quickload '(prove))
-  (use-package :prove))
-
+(in-package :selenium-test)
 
 (defparameter *code* "
 package main
@@ -15,7 +10,7 @@ func main() {
 
 (plan 1)
 
-(with-session (:browser :chrome)
+(with-session ()
   (setf (url) "http://play.golang.org/?simple=1")
   (let ((elem (find-element "#code" :by :css-selector)))
     (element-clear elem)

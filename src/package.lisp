@@ -19,10 +19,16 @@
            :element-send-keys
            :element-id
            :element-text
+           :element-tagname
            :element-attribute
 
            :make-cookie
            :cookie
+
+           :log-types
+           :logs
+
+           :execute-script
 
            :no-such-element-error)
   (:import-from :alexandria

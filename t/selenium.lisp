@@ -7,7 +7,15 @@
 
 (plan nil)
 
-(is-print (princ (selenium::make-uri "/session") nil) "#<quri.uri.http:uri-http http://127.0.0.1:4444/wd/hub/session>")
+(subtest "make-uri"
+  (let ((uri (selenium::make-uri "/session")))
+    (is (format nil "~a://~a:~a/"
+                (quri:uri-scheme uri)
+                (quri:uri-host uri)
+                (quri:uri-port uri))
+        selenium::*uri*)
+    (is (quri:uri-path uri)
+        (format nil "~a/session" selenium::*prefix*))))
 
 (defparameter *base-url* "https://www.google.com?hl=en")
 
@@ -26,7 +34,6 @@
     (setf (url) *base-url*)
     (like (url) "https://www.google.*")))
 
-;; TODO: useless
 (subtest "back"
   (with-base-session
     (like (url) "https://www.google.*")
@@ -58,6 +65,10 @@
   (with-base-session
     (is (element-text (find-element "Gmail" :by :partial-link-text)) "Gmail")))
 
+(subtest "element-tagname"
+  (with-base-session
+    (is (element-tagname (find-element "[name=q]")) "input")))
+
 (subtest "element-attribute"
   (with-base-session
     (let ((input (find-element "[name=q]")))
@@ -87,5 +98,15 @@
       (element-send-keys input (key :home))
       (element-send-keys input "cl-selenium-")
       (is (element-attribute input "value") "cl-selenium-webdriver"))))
+
+(subtest "logs"
+  (with-base-session
+    (ok (log-types))
+    (ok (logs "client"))))
+
+(subtest "execute-script"
+  (with-base-session
+    (is (execute-script "return arguments[0] + arguments[1];" '(2 3)) 5)
+    (is (execute-script "return 42" nil) 42)))
 
 (finalize)
