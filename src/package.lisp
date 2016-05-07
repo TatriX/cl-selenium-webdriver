@@ -38,7 +38,12 @@
 (defpackage selenium-utils
   (:use :cl :selenium)
   (:export :wait-for
-           :get-cookie)
+           :get-cookie
+           :elem
+           :attr
+           :send-key
+           :send-keys
+           :click)
   (:import-from :alexandria
                 :assoc-value
                 :rcurry))

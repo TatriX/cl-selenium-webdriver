@@ -22,3 +22,20 @@
                      :test #'equal
                      :key (rcurry #'assoc-value :name))
                :value))
+
+(defun elem (&optional selector)
+  (if selector
+      (wait-for selector)
+      (active-element)))
+
+(defun attr (name &optional selector)
+  (element-attribute (elem selector) name))
+
+(defun send-key (key &optional selector)
+  (element-send-keys (elem selector) (key key)))
+
+(defun send-keys (keys &optional selector)
+  (element-send-keys (elem selector) keys))
+
+(defun click (&optional selector)
+  (element-click (elem selector)))
