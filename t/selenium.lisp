@@ -109,4 +109,17 @@
     (is (execute-script "return arguments[0] + arguments[1];" '(2 3)) 5)
     (is (execute-script "return 42" nil) 42)))
 
+(subtest "mouse-move-to"
+  (with-base-session
+    (ok (mouse-move-to 0 0 :element (find-element "[name=btnG]")))
+    (ok (mouse-move-to 100 100))))
+
+(subtest "mouse-click"
+  (with-base-session
+    (element-send-keys (active-element) "cl-selenium-webdriver")
+    (ok (mouse-move-to 0 0 :element (find-element "[name=btnG]")))
+    (ok (mouse-click :left))
+    (ok (wait-for "#resultStats"))))
+
+
 (finalize)

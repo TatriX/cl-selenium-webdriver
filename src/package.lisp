@@ -22,6 +22,9 @@
            :element-tagname
            :element-attribute
 
+           :mouse-move-to
+           :mouse-click
+
            :make-cookie
            :cookie
 

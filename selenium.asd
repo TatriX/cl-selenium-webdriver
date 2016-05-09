@@ -9,6 +9,7 @@
                         ((:file "package")
                          (:file "errors")
                          (:file "keys")
+                         (:file "mouse")
                          (:file "http")
                          (:file "session")
                          (:file "selenium")
