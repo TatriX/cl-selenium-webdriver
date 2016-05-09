@@ -37,10 +37,12 @@
 
 (defpackage selenium-utils
   (:use :cl :selenium)
-  (:export :wait-for
+  (:export :*timeout*
+           :wait-for
            :get-cookie
            :elem
            :attr
+           :text
            :send-key
            :send-keys
            :click)

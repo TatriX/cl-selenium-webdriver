@@ -31,6 +31,9 @@
 (defun attr (name &optional selector)
   (element-attribute (elem selector) name))
 
+(defun text (&optional selector)
+  (element-text (elem selector)))
+
 (defun send-key (key &optional selector)
   (element-send-keys (elem selector) (key key)))
 

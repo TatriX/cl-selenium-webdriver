@@ -5,7 +5,7 @@
 
 (in-package :selenium-utils-test)
 
-(defparameter *base-url* "https://www.google.com?hl=en")
+(defparameter *base-url* "https://www.google.ru?hl=en")
 
 (defmacro with-base-session (&body body)
   `(with-session ()
@@ -36,6 +36,10 @@
 (subtest "attr"
   (with-base-session
     (is (attr "name") "q")))
+
+(subtest "text"
+  (with-base-session
+    (is (text ".logo-subtext") "Russia")))
 
 (subtest "send-key"
   (with-base-session
