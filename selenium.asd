@@ -8,10 +8,10 @@
                         :components
                         ((:file "package")
                          (:file "errors")
+                         (:file "session")
                          (:file "keys")
                          (:file "mouse")
                          (:file "http")
-                         (:file "session")
                          (:file "selenium")
                          (:file "utils"))))
   :in-order-to ((test-op (test-op selenium-test))))

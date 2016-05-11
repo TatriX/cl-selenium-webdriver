@@ -31,6 +31,9 @@
 (defun attr (name &optional selector)
   (element-attribute (elem selector) name))
 
+(defun id (&optional selector)
+  (attr "id" selector))
+
 (defun text (&optional selector)
   (element-text (elem selector)))
 

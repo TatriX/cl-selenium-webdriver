@@ -14,6 +14,13 @@
        :initform (error "Must supply :id")
        :reader element-id)))
 
+(defmethod print-object ((element element) stream)
+  (with-slots (id) element
+    (format stream
+            "#<selenium::element {id:~a} id=~a>"
+            id
+            (element-attribute element "id"))))
+
 (defun handle-find-error (err &key value by)
   (error
    (case (protocol-error-status err)

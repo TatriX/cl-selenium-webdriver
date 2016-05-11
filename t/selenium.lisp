@@ -45,6 +45,11 @@
     (is-type (find-element "[name=q]") 'selenium::element)
     (ok (element-id (find-element "[name=btnK]")))))
 
+(subtest "print-element"
+  (with-base-session
+    (is (princ-to-string (find-element "#lst-ib"))
+        "#<selenium::element {id:0} id=lst-ib>")))
+
 (subtest "find-element-no-such-element"
   (with-base-session
     (is-error (find-element (gensym)) 'selenium:no-such-element-error)))

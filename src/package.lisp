@@ -45,6 +45,7 @@
            :get-cookie
            :elem
            :attr
+           :id
            :text
            :send-key
            :send-keys

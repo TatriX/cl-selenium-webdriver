@@ -35,7 +35,12 @@
 
 (subtest "attr"
   (with-base-session
-    (is (attr "name") "q")))
+    (is (attr "name") "q")
+    (is (attr "id" "[name=q]") "lst-ib")))
+
+(subtest "id"
+  (with-base-session
+    (is (id) "lst-ib")))
 
 (subtest "text"
   (with-base-session
