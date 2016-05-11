@@ -45,6 +45,13 @@
     (is-type (find-element "[name=q]") 'selenium::element)
     (ok (element-id (find-element "[name=btnK]")))))
 
+(subtest "find-elements"
+  (with-base-session
+    (let ((elements (find-elements "input[type=text]")))
+      (is-type elements 'list)
+      (dolist (elem elements)
+        (is-type elem 'selenium::element)))))
+
 (subtest "print-element"
   (with-base-session
     (is (princ-to-string (find-element "#lst-ib"))

@@ -13,6 +13,7 @@
            :refresh
 
            :find-element
+           :find-elements
            :active-element
            :element-clear
            :element-click
