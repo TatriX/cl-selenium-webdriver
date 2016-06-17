@@ -6,6 +6,9 @@
            :delete-session
            :with-session
 
+           :start-interactive-session
+           :stop-interactive-session
+
            :key
 
            :url
@@ -42,11 +45,15 @@
 (defpackage selenium-utils
   (:use :cl :selenium)
   (:export :*timeout*
+           :*default-element-func*
+           :find-elem
            :wait-for
            :get-cookie
            :elem
            :attr
            :id
+           :classname
+           :classlist
            :text
            :send-key
            :send-keys

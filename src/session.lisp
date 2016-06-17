@@ -39,5 +39,15 @@
          (when ,session
            (delete-session ,session))))))
 
+(defun start-interactive-session (&rest capabilities)
+  (when *session*
+    (delete-session *session*))
+  (setf *session* (apply #'make-session  capabilities)))
+
+(defun stop-interactive-session ()
+  (when *session*
+    (delete-session *session*)
+    (setf *session* nil)))
+
 (defun session-path (session fmt &rest args)
   (format nil "/session/~a~a" (session-id session) (apply #'format nil fmt args)))

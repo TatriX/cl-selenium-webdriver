@@ -1,13 +1,16 @@
 (in-package :selenium-utils)
 
 (defparameter *timeout* 30)
+(defparameter *default-element-func* #'active-element)
+
+(defun find-elem (selector)
+  (handler-case (find-element selector)
+    (no-such-element-error () nil)))
 
 (defun wait-for (selector &key (timeout *timeout*))
   (loop
      for i from 0
-     for elem = (handler-case
-                    (find-element selector)
-                  (no-such-element-error () nil))
+     for elem = (find-elem selector)
      until elem
      if (= i (* 2 timeout))
      do (error "Element ~a didn't appeared" selector)
@@ -26,13 +29,19 @@
 (defun elem (&optional selector)
   (if selector
       (wait-for selector)
-      (active-element)))
+      (funcall *default-element-func*)))
 
 (defun attr (name &optional selector)
   (element-attribute (elem selector) name))
 
 (defun id (&optional selector)
   (attr "id" selector))
+
+(defun classname (&optional selector)
+  (attr "className" selector))
+
+(defun classlist (&optional selector)
+  (split-sequence:split-sequence #\Space (classname selector)))
 
 (defun text (&optional selector)
   (element-text (elem selector)))

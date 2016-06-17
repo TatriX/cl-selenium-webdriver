@@ -39,7 +39,6 @@
 (defun find-elements (value &key (by :css-selector) (session *session*))
   (handler-case
       (let ((response (http-post (session-path session "/elements") `(:value ,value :using ,(by by)))))
-        (setf *x* response)
         (loop for ((nil . id)) in (cdr (assoc :value response))
            collect (make-instance 'element :id id)))
     (protocol-error (err) (handle-find-error err :value value :by by))))

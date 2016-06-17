@@ -133,5 +133,4 @@
     (ok (mouse-click :left))
     (ok (wait-for "#resultStats"))))
 
-
 (finalize)

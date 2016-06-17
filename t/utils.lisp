@@ -14,6 +14,11 @@
 
 (plan nil)
 
+(subtest "find-elem"
+  (with-base-session
+    (is-type (find-elem "[name=q]") 'selenium::element)
+    (is (find-elem (gensym)) nil)))
+
 (subtest "wait-for"
   (with-base-session
     (let ((result-selector "#resultStats"))
@@ -41,6 +46,14 @@
 (subtest "id"
   (with-base-session
     (is (id) "lst-ib")))
+
+(subtest "classname"
+  (with-base-session
+    (is (classname) "gsfi lst-d-f")))
+
+(subtest "classlist"
+  (with-base-session
+    (is (classlist) '("gsfi" "lst-d-f"))))
 
 (subtest "text"
   (with-base-session
