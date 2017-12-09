@@ -32,8 +32,10 @@
   (handler-case
       (let ((response (http-post (session-path session "/element") `(:value ,value :using ,(by by)))))
         ;; TODO: find/write json -> clos
-        (make-instance 'element
-                       :id (cdadr (assoc :value response))))
+        (if (= 0 (cdr (assoc :status response)))
+            (make-instance 'element
+                           :id (cdadr (assoc :value response)))
+            (error 'protocol-error :body response)))
     (protocol-error (err) (handle-find-error err :value value :by by))))
 
 (defun find-elements (value &key (by :css-selector) (session *session*))
