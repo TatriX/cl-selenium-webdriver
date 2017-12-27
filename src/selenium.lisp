@@ -53,7 +53,7 @@
     (:partial-link-text "partial link text")
     (:name "name")
     (:tag-name "tag name")
-    (:class-name "class-name")
+    (:class-name "class name")
     (:css-selector "css selector")))
 
 (defun active-element (&key (session *session*))
