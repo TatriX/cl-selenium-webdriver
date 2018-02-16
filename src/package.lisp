@@ -26,6 +26,8 @@
            :element-tagname
            :element-attribute
 
+           :switch-to-frame
+
            :mouse-move-to
            :mouse-click
 
