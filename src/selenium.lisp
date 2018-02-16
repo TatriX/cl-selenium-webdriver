@@ -121,6 +121,9 @@
   (http-post-check (session-path session "/frame")
                    `(:id ,id)))
 
+(defun close-current-window (&key (session *session*))
+  (http-delete (session-path session "/window")))
+
 (defun execute-script (script args &key (session *session*))
   (check-type script string)
   (check-type args list)
