@@ -117,6 +117,13 @@
 (defun refresh (&key (session *session*))
   (http-post (session-path session "/refresh")))
 
+(defun switch-to-frame (id &key (session *session*))
+  (http-post-check (session-path session "/frame")
+                   `(:id ,id)))
+
+(defun close-current-window (&key (session *session*))
+  (http-delete (session-path session "/window")))
+
 (defun execute-script (script args &key (session *session*))
   (check-type script string)
   (check-type args list)
