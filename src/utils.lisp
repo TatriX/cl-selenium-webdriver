@@ -13,7 +13,7 @@
      for elem = (find-elem selector)
      until elem
      if (= i (* 2 timeout))
-     do (error "Element ~a didn't appeared" selector)
+     do (error "Element ~a didn't appear" selector)
      else
      do (sleep 0.5)
      finally (return elem)))
