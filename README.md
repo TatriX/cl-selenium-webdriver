@@ -50,7 +50,7 @@ You need a running instance of selenium-server-standalone.
 
 [Download](http://www.seleniumhq.org/download/) it and run:
 ```
-curl -L0 http://goo.gl/IHP6Qw -o selenium-server-standalone.jar
+curl -L0 https://goo.gl/SP94ZB -o selenium-server-standalone.jar
 java -jar selenium-server-standalone.jar
 ```
 
@@ -63,17 +63,34 @@ There is a `:cl-selenium-utils` package which should reduce boilerplate. For exa
   (:import-from :cl-selenium-utils
                 :send-keys
                 :click
-                :wait-for))
+                :wait-for
+                :classlist))
 
 (in-package :my-test)
 
 (with-session ()
   (setf (url) "http://google.com")
   (send-keys "cl-selenium-webdriver")
-  (click "[name=btnG]")
+  (click "[name=btnK]")
   (wait-for "#resultStats"))
 
 ```
+
+### Interactive session
+You can just start the session and control it from your repl:
+```lisp
+(in-package :my-test)
+
+(start-interactive-session)
+
+(setf (url) "http://google.com")
+(send-keys "cl-selenium-webdriver")
+(send-keys (key :enter))
+(classlist "#slim_appbar") ; prints ("ab_tnav_wrp")
+
+(stop-interactive-session)
+```
+
 ### Utils API conventions
 If utility function needs an element to work on it defaults to `(active-element)`.
 ```lisp
@@ -101,7 +118,7 @@ them to load.
 ```
 Timeout defaults to 30 seconds. You can globally change it:
 ```lisp
-(setf *cl-selenium-utils:timeout* 10)
+(setf cl-selenium-utils:*timeout* 3)
 ```
 
 ## Copyright
