@@ -18,19 +18,22 @@
         (format nil "~a/session" cl-selenium::*prefix*))))
 
 (defparameter *base-url* "https://www.google.com?hl=en")
+(defparameter *headless* '((:chrome-options . ((:args . #("--headless"))))))
+(setf *timeout* 5)
 
 (defmacro with-base-session (&body body)
-  `(with-session ()
+
+  `(with-session (:additional-capabilities *headless*)
      (setf (url) *base-url*)
      ,@body))
 
 (subtest "session"
   (let (session)
-    (ok (setf session (make-session)))
+    (ok (setf session (make-session :additional-capabilities *headless*)))
     (ok (delete-session session))))
 
 (subtest "url"
-  (with-session ()
+  (with-session (:additional-capabilities *headless*)
     (setf (url) *base-url*)
     (like (url) "https://www.google.*")))
 
@@ -54,8 +57,11 @@
 
 (subtest "print-element"
   (with-base-session
-      (is (princ-to-string (find-element "#lst-ib"))
-          "#<cl-selenium::element {id:0} id=lst-ib>")))
+    (let ((got (princ-to-string (find-element "#lst-ib")))
+          (start "#<cl-selenium::element {id:")
+          (end "} id=lst-ib>"))
+      (is (subseq got 0 (length start)) start)
+      (is (subseq got (- (length got) (length end))) end))))
 
 (subtest "find-element-no-such-element"
   (with-base-session
@@ -129,7 +135,8 @@
 (subtest "mouse-click"
   (with-base-session
     (element-send-keys (active-element) "cl-selenium-webdriver")
-    (ok (mouse-move-to 0 0 :element (find-element "[name=btnK]")))
+    (sleep 0.5)
+    (ok (mouse-move-to 20 0 :element (find-element "[name=btnK]")))
     (ok (mouse-click :left))
     (ok (wait-for "#resultStats"))))
 
