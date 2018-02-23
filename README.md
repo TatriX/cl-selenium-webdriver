@@ -121,6 +121,14 @@ Timeout defaults to 30 seconds. You can globally change it:
 (setf cl-selenium-utils:*timeout* 3)
 ```
 
+## Running tests
+Just run from the repl:
+```lisp
+(ql:quickload :cl-selenium)
+(asdf:test-system :cl-selenium)
+```
+
+
 ## Copyright
 
 Licensed under the MIT License.
