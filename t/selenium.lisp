@@ -1,21 +1,21 @@
 (in-package :cl-user)
 
-(defpackage selenium-test
-  (:use :cl :selenium :selenium-utils :prove))
+(defpackage cl-selenium-test
+  (:use :cl :cl-selenium :cl-selenium-utils :prove))
 
-(in-package :selenium-test)
+(in-package :cl-selenium-test)
 
 (plan nil)
 
 (subtest "make-uri"
-  (let ((uri (selenium::make-uri "/session")))
+  (let ((uri (cl-selenium::make-uri "/session")))
     (is (format nil "~a://~a:~a/"
                 (quri:uri-scheme uri)
                 (quri:uri-host uri)
                 (quri:uri-port uri))
-        selenium::*uri*)
+        cl-selenium::*uri*)
     (is (quri:uri-path uri)
-        (format nil "~a/session" selenium::*prefix*))))
+        (format nil "~a/session" cl-selenium::*prefix*))))
 
 (defparameter *base-url* "https://www.google.com?hl=en")
 
@@ -41,25 +41,25 @@
 
 (subtest "find-element"
   (with-base-session
-    (ok (find-element "#lst-ib"))
-    (is-type (find-element "[name=q]") 'selenium::element)
+      (ok (find-element "#lst-ib"))
+    (is-type (find-element "[name=q]") 'cl-selenium::element)
     (ok (element-id (find-element "[name=btnK]")))))
 
 (subtest "find-elements"
   (with-base-session
-    (let ((elements (find-elements "input[type=text]")))
-      (is-type elements 'list)
-      (dolist (elem elements)
-        (is-type elem 'selenium::element)))))
+      (let ((elements (find-elements "input[type=text]")))
+        (is-type elements 'list)
+        (dolist (elem elements)
+          (is-type elem 'cl-selenium::element)))))
 
 (subtest "print-element"
   (with-base-session
-    (is (princ-to-string (find-element "#lst-ib"))
-        "#<selenium::element {id:0} id=lst-ib>")))
+      (is (princ-to-string (find-element "#lst-ib"))
+          "#<cl-selenium::element {id:0} id=lst-ib>")))
 
 (subtest "find-element-no-such-element"
   (with-base-session
-    (is-error (find-element (gensym)) 'selenium:no-such-element-error)))
+      (is-error (find-element (gensym)) 'cl-selenium:no-such-element-error)))
 
 (subtest "element-clear"
   (with-base-session
@@ -83,9 +83,9 @@
 
 (subtest "element-attribute"
   (with-base-session
-    (let ((input (find-element "[name=q]")))
-      (element-send-keys input "cl-selenium-webdriver")
-      (is (element-attribute input "value") "cl-selenium-webdriver"))))
+      (let ((input (find-element "[name=q]")))
+        (element-send-keys input "cl-cl-selenium-webdriver")
+        (is (element-attribute input "value") "cl-cl-selenium-webdriver"))))
 
 (subtest "active-element"
   (with-base-session
@@ -99,7 +99,7 @@
 
 (subtest "refresh"
   (with-base-session
-    (element-send-keys (find-element "[name=q]") "cl-selenium-webdriver")
+      (element-send-keys (find-element "[name=q]") "cl-selenium-webdriver")
     (refresh)
     (is (element-text (find-element "[name=q]")) "")))
 
@@ -123,13 +123,13 @@
 
 (subtest "mouse-move-to"
   (with-base-session
-    (ok (mouse-move-to 0 0 :element (find-element "[name=btnG]")))
+    (ok (mouse-move-to 0 0 :element (find-element "[name=btnK]")))
     (ok (mouse-move-to 100 100))))
 
 (subtest "mouse-click"
   (with-base-session
     (element-send-keys (active-element) "cl-selenium-webdriver")
-    (ok (mouse-move-to 0 0 :element (find-element "[name=btnG]")))
+    (ok (mouse-move-to 0 0 :element (find-element "[name=btnK]")))
     (ok (mouse-click :left))
     (ok (wait-for "#resultStats"))))
 

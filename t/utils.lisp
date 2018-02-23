@@ -1,9 +1,9 @@
 (in-package :cl-user)
 
-(defpackage selenium-utils-test
-  (:use :cl :selenium :selenium-utils :prove))
+(defpackage cl-selenium-utils-test
+  (:use :cl :cl-selenium :cl-selenium-utils :prove))
 
-(in-package :selenium-utils-test)
+(in-package :cl-selenium-utils-test)
 
 (defparameter *base-url* "https://www.google.ru?hl=en")
 
