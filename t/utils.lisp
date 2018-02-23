@@ -5,10 +5,12 @@
 
 (in-package :cl-selenium-utils-test)
 
-(defparameter *base-url* "https://www.google.ru?hl=en")
+(defparameter *base-url* "https://www.google.com?hl=en")
+(defparameter *headless* '((:chrome-options . ((:args . #("--headless"))))))
+(setf *timeout* 5)
 
 (defmacro with-base-session (&body body)
-  `(with-session ()
+  `(with-session (:additional-capabilities *headless*)
      (setf (url) *base-url*)
      ,@body))
 
@@ -24,8 +26,8 @@
     (let ((result-selector "#resultStats"))
       (is-error (find-element result-selector) 'no-such-element-error)
       (element-send-keys (find-element "[name=q]") "cl-selenium-webdriver")
-      (element-click (find-element "[name=btnG]"))
-      (is-error (find-element result-selector) 'no-such-element-error)
+      (sleep 0.5)
+      (element-click (find-element "[name=btnK]"))
       (ok (wait-for result-selector)))))
 
 (subtest "cookie-get"
@@ -36,7 +38,7 @@
 (subtest "elem"
   (with-base-session
     (is (element-id (elem)) (element-id (active-element)))
-    (is (element-id (elem "[name=btnG]")) (element-id (find-element "[name=btnG]")))))
+    (is (element-id (elem "[name=btnK]")) (element-id (find-element "[name=btnK]")))))
 
 (subtest "attr"
   (with-base-session
@@ -57,7 +59,7 @@
 
 (subtest "text"
   (with-base-session
-    (is (text ".logo-subtext") "Russia")))
+    (is (text ".gb_P") "Gmail")))
 
 (subtest "send-key"
   (with-base-session
@@ -72,7 +74,8 @@
 (subtest "click"
   (with-base-session
     (send-keys "cl-selenium-webdriver")
-    (click "[name=btnG]")
+    (sleep 0.5)
+    (click "[name=btnK]")
     (ok (wait-for "#resultStats"))))
 
 (finalize)

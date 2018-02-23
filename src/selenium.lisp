@@ -17,7 +17,7 @@
 (defmethod print-object ((element element) stream)
   (with-slots (id) element
     (format stream
-            "#<selenium::element {id:~a} id=~a>"
+            "#<cl-selenium::element {id:~a} id=~a>"
             id
             (element-attribute element "id"))))
 

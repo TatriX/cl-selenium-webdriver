@@ -122,10 +122,15 @@ Timeout defaults to 30 seconds. You can globally change it:
 ```
 
 ## Running tests
-Just run from the repl:
+### REPL
 ```lisp
-(ql:quickload :cl-selenium)
-(asdf:test-system :cl-selenium)
+(ql:quickload '(:cl-selenium :prove))
+(setf prove:*enable-colors* nil)
+(prove:run :cl-selenium-test)
+```
+### Shell
+```sh
+./test.sh
 ```
 
 
