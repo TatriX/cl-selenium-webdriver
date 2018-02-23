@@ -1,4 +1,4 @@
-(in-package :selenium)
+(in-package :cl-selenium)
 
 (defun (setf url) (url &key (session *session*))
   (http-post-value (session-path session "/url") `(:url ,url)))

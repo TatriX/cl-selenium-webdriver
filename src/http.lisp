@@ -1,4 +1,4 @@
-(in-package :selenium)
+(in-package :cl-selenium)
 
 ;; uri
 

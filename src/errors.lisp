@@ -1,4 +1,4 @@
-(in-package :selenium)
+(in-package :cl-selenium)
 
 (define-condition protocol-error (error)
   ((body :initarg :body :reader protocol-error-body)))

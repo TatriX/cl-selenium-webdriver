@@ -1,4 +1,4 @@
-(in-package :selenium)
+(in-package :cl-selenium)
 
 (defun mouse-move-to (x y &key element (session *session*))
   (http-post-check (session-path session "/moveto")

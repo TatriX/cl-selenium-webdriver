@@ -1,10 +1,10 @@
 (in-package :cl-user)
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (ql:quickload :selenium))
+  (ql:quickload :cl-selenium))
 
 (defpackage go-test
-  (:use :cl :selenium))
+  (:use :cl :cl-selenium))
 
 (in-package :go-test)
 
