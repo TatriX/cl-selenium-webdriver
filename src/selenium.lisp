@@ -90,6 +90,9 @@
 (defun logs (type &key (session *session*))
   (http-post-value (session-path session "/log") `(:type ,type)))
 
+(defun screenshot (&key (session *session*))
+  (http-get-value (session-path session "/screenshot")))
+
 (defclass cookie ()
   ((name :initarg :name)
    (value :initarg :value)

@@ -38,6 +38,8 @@
            :log-types
            :logs
 
+           :screenshot
+
            :execute-script
 
            :no-such-element-error)

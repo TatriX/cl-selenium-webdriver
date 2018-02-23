@@ -44,16 +44,16 @@
 
 (subtest "find-element"
   (with-base-session
-      (ok (find-element "#lst-ib"))
+    (ok (find-element "#lst-ib"))
     (is-type (find-element "[name=q]") 'cl-selenium::element)
     (ok (element-id (find-element "[name=btnK]")))))
 
 (subtest "find-elements"
   (with-base-session
-      (let ((elements (find-elements "input[type=text]")))
-        (is-type elements 'list)
-        (dolist (elem elements)
-          (is-type elem 'cl-selenium::element)))))
+    (let ((elements (find-elements "input[type=text]")))
+      (is-type elements 'list)
+      (dolist (elem elements)
+        (is-type elem 'cl-selenium::element)))))
 
 (subtest "print-element"
   (with-base-session
@@ -65,7 +65,7 @@
 
 (subtest "find-element-no-such-element"
   (with-base-session
-      (is-error (find-element (gensym)) 'cl-selenium:no-such-element-error)))
+    (is-error (find-element (gensym)) 'cl-selenium:no-such-element-error)))
 
 (subtest "element-clear"
   (with-base-session
@@ -89,9 +89,9 @@
 
 (subtest "element-attribute"
   (with-base-session
-      (let ((input (find-element "[name=q]")))
-        (element-send-keys input "cl-cl-selenium-webdriver")
-        (is (element-attribute input "value") "cl-cl-selenium-webdriver"))))
+    (let ((input (find-element "[name=q]")))
+      (element-send-keys input "cl-cl-selenium-webdriver")
+      (is (element-attribute input "value") "cl-cl-selenium-webdriver"))))
 
 (subtest "active-element"
   (with-base-session
@@ -105,7 +105,7 @@
 
 (subtest "refresh"
   (with-base-session
-      (element-send-keys (find-element "[name=q]") "cl-selenium-webdriver")
+    (element-send-keys (find-element "[name=q]") "cl-selenium-webdriver")
     (refresh)
     (is (element-text (find-element "[name=q]")) "")))
 
@@ -139,5 +139,10 @@
     (ok (mouse-move-to 20 0 :element (find-element "[name=btnK]")))
     (ok (mouse-click :left))
     (ok (wait-for "#resultStats"))))
+
+(subtest "take-screenshot"
+  (with-base-session
+    (with-open-file (stream "/tmp/test.html" :direction :output :if-exists :supersede)
+      (format stream "<img src='data:image/png;base64,~a'>" (screenshot)))))
 
 (finalize)
