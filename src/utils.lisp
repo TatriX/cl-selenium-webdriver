@@ -1,4 +1,4 @@
-(in-package :selenium-utils)
+(in-package :cl-selenium-utils)
 
 (defparameter *timeout* 30)
 (defparameter *default-element-func* #'active-element)

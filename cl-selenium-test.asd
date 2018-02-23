@@ -1,7 +1,7 @@
-(defsystem selenium-test
+(defsystem cl-selenium-test
   :author "TatriX <tatrics@gmail.com>"
   :license "MIT"
-  :depends-on (:selenium
+  :depends-on (:cl-selenium
                :prove)
   :defsystem-depends-on (:prove-asdf)
   :components

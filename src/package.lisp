@@ -1,6 +1,6 @@
 ;;;; package.lisp
 
-(defpackage selenium
+(defpackage cl-selenium
   (:use :cl)
   (:export :make-session
            :delete-session
@@ -45,8 +45,8 @@
                 :with-gensyms
                 :assoc-value))
 
-(defpackage selenium-utils
-  (:use :cl :selenium)
+(defpackage cl-selenium-utils
+  (:use :cl :cl-selenium)
   (:export :*timeout*
            :*default-element-func*
            :find-elem

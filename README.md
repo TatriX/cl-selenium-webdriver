@@ -10,10 +10,10 @@ This software is in development. The APIs will be likely to change.
 (in-package :cl-user)
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (ql:quickload :selenium))
+  (ql:quickload :cl-selenium))
 
 (defpackage go-test
-  (:use :cl :selenium))
+  (:use :cl :cl-selenium))
 
 (in-package :go-test)
 
@@ -43,7 +43,7 @@ func main() {
 ## Installation
 ```
 git clone https://github.com/TatriX/cl-selenium-webdriver ~/quicklisp/local-projects/
-(ql:quickload :selenium)
+(ql:quickload :cl-selenium)
 ```
 
 You need a running instance of selenium-server-standalone.
@@ -56,11 +56,11 @@ java -jar selenium-server-standalone.jar
 
 ## Utils
 
-There is `:selenium-utils` package which should reduce boilerplate. For example:
+There is a `:cl-selenium-utils` package which should reduce boilerplate. For example:
 ```lisp
 (defpackage my-test
-  (:use :cl :selenium)
-  (:import-from :selenium-utils
+  (:use :cl :cl-selenium)
+  (:import-from :cl-selenium-utils
                 :send-keys
                 :click
                 :wait-for))
@@ -74,8 +74,35 @@ There is `:selenium-utils` package which should reduce boilerplate. For example:
   (wait-for "#resultStats"))
 
 ```
-By default every util function (except `(wait-for)` for obvious reasons) will work on `(active-element)`.
-They also accept css selector as a last parameter.
+### Utils API conventions
+If utility function needs an element to work on it defaults to `(active-element)`.
+```lisp
+(click) ; click on the current active element.
+```
+You can also pass a css selector as a last parameter.
+```lisp
+(print (id "#submit")) ; print id the of matched element
+
+(assert (= (first (classlist "div")) "first-div-ever"))
+```
+
+To change default element you can:
+```lisp
+(setf cl-selenium-utils:*default-element-func* (lambda () (find-element "input[type=submit]"))
+```
+
+
+### Waiting for the reaction
+Often you need to wait for some action to be done. For example if you
+do a `(click)` on the button to load search results, you need to wait
+them to load.
+```lisp
+(wait-for ".search-result" :timeout 10) ; wait 10 seconds
+```
+Timeout defaults to 30 seconds. You can globally change it:
+```lisp
+(setf *cl-selenium-utils:timeout* 10)
+```
 
 ## Copyright
 

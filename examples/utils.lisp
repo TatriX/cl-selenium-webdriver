@@ -1,9 +1,9 @@
 (defpackage my-test
-  (:use :cl :selenium)
-  (:import-from :selenium-utils
-                :send-keys
+  (:use :cl :cl-selenium)
+  (:import-from :cl-selenium-utils
+   :send-keys
                 :click
-                :wait-for))
+   :wait-for))
 
 (in-package :my-test)
 
