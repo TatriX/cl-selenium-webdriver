@@ -16,7 +16,7 @@
 
 (subtest "find-elem"
   (with-base-session
-    (is-type (find-elem "[name=q]") 'selenium::element)
+    (is-type (find-elem "[name=q]") 'cl-selenium::element)
     (is (find-elem (gensym)) nil)))
 
 (subtest "wait-for"
