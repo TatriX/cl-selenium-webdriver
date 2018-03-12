@@ -20,6 +20,8 @@
            :active-element
            :element-clear
            :element-click
+           :element-displayed
+           :element-location
            :element-send-keys
            :element-id
            :element-text
