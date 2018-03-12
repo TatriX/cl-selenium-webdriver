@@ -5,6 +5,7 @@
   (:export :make-session
            :delete-session
            :with-session
+           :use-session
 
            :start-interactive-session
            :stop-interactive-session
