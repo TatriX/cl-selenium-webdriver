@@ -78,6 +78,12 @@
 (defun element-text (element &key (session *session*))
   (http-get-value (session-path session "/element/~a/text" (element-id element))))
 
+(defun element-displayed (element &key (session *session*))
+  (http-get-value (session-path session "/element/~a/displayed" (element-id element))))
+
+(defun element-location (element &key (session *session*))
+  (http-get-value (session-path session "/element/~a/location" (element-id element))))
+
 (defun element-tagname (element &key (session *session*))
   (http-get-value (session-path session "/element/~a/name" (element-id element))))
 

@@ -30,6 +30,9 @@
   (http-delete-check (session-path session "")))
 
 ;; TODO: make eldoc-friendly
+(defun use-session(session)
+  (setf *session* session))
+
 (defmacro with-session ((&rest capabilities) &body body)
   (with-gensyms (session)
     `(let (,session)

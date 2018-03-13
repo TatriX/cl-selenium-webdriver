@@ -79,9 +79,19 @@
   (with-base-session
     (ok (element-click (find-element "[name=btnI]")))))
 
+(subtest "element-displayed"
+         (with-base-session
+             (ok (element-displayed (find-element "[name=btnI]")))))
+
 (subtest "element-text"
   (with-base-session
     (is (element-text (find-element "Gmail" :by :partial-link-text)) "Gmail")))
+
+(subtest "element-location"
+         (with-base-session
+             (let ((location (element-location (find-element "Gmail" :by :partial-link-text))))
+               (ok (assoc :x location))
+               (ok (assoc :y location)))))
 
 (subtest "element-tagname"
   (with-base-session

@@ -5,6 +5,7 @@
   (:export :make-session
            :delete-session
            :with-session
+           :use-session
 
            :start-interactive-session
            :stop-interactive-session
@@ -20,6 +21,8 @@
            :active-element
            :element-clear
            :element-click
+           :element-displayed
+           :element-location
            :element-send-keys
            :element-id
            :element-text
